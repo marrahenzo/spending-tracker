@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @Entity
-public class Movement extends DatedEntity implements Serializable {
+public class Operation extends DatedEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +27,7 @@ public class Movement extends DatedEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private Currency currency;
 
+    @ManyToOne(fetch = FetchType.EAGER)
     private Category category;
 
     private LocalDateTime date;

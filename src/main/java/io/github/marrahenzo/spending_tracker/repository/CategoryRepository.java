@@ -1,13 +1,13 @@
 package io.github.marrahenzo.spending_tracker.repository;
 
-import io.github.marrahenzo.spending_tracker.model.Movement;
+import io.github.marrahenzo.spending_tracker.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface MovementRepository extends JpaRepository<Movement, Long> {
+public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    List<Movement> findByUserId(Long userId);
+    List<Category> findByUserId(Long userId);
 }

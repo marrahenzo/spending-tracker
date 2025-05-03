@@ -4,6 +4,7 @@ import io.github.marrahenzo.spending_tracker.dto.ErrorDTO;
 import io.github.marrahenzo.spending_tracker.dto.LoginRequest;
 import io.github.marrahenzo.spending_tracker.dto.SignupRequest;
 import io.github.marrahenzo.spending_tracker.dto.SuccessDTO;
+import io.github.marrahenzo.spending_tracker.exception.InvalidCredentialsException;
 import io.github.marrahenzo.spending_tracker.service.AuthService;
 import io.github.marrahenzo.spending_tracker.service.UserService;
 import io.github.marrahenzo.spending_tracker.util.Constants;
@@ -32,9 +33,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<SuccessDTO> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest) {
+    public ResponseEntity<SuccessDTO> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest) throws InvalidCredentialsException {
         var user = this.authService.validateLogin(request);
-        if (user.isEmpty()) throw new IllegalArgumentException("Invalid login credentials");
+        if (user.isEmpty()) throw new InvalidCredentialsException("Invalid username and/or password");
 
         var auth = new UsernamePasswordAuthenticationToken(user, null, List.of());
         SecurityContextHolder.getContext().setAuthentication(auth);
@@ -57,14 +58,12 @@ public class AuthController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorDTO> handleException() {
+    @ExceptionHandler({IllegalArgumentException.class, InvalidCredentialsException.class})
+    public ResponseEntity<ErrorDTO> handleException(Exception e) {
         return ResponseEntity.badRequest()
                 .body(
                         ErrorDTO.builder()
-                                .message("Error custom del back")
-                                .errorCode("403")
-                                .exception("IllegalArgumentException")
+                                .message(e.getMessage())
                                 .build()
                 );
     }

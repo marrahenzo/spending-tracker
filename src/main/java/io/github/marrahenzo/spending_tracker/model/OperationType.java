@@ -1,9 +1,10 @@
 package io.github.marrahenzo.spending_tracker.model;
 
-public enum MovementType {
+public enum OperationType {
 
     INCOME("Income"),
     EXPENSE("Expense");
 
-    MovementType(String name) {}
+    OperationType(String name) {
+    }
 }
