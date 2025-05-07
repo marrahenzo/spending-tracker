@@ -5,6 +5,8 @@ import io.github.marrahenzo.spending_tracker.model.Category;
 import io.github.marrahenzo.spending_tracker.model.Currency;
 import io.github.marrahenzo.spending_tracker.model.Operation;
 import io.github.marrahenzo.spending_tracker.model.User;
+import io.github.marrahenzo.spending_tracker.model.entityview.AmountPerCategoryView;
+import io.github.marrahenzo.spending_tracker.repository.OperationCustomRepository;
 import io.github.marrahenzo.spending_tracker.repository.OperationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,11 +22,16 @@ public class OperationService {
 
     private final OperationRepository operationRepository;
     private final CategoryService categoryService;
+    private final OperationCustomRepository operationCustomRepository;
 
     @Autowired
-    public OperationService(OperationRepository operationRepository, CategoryService categoryService) {
+    public OperationService(
+            OperationRepository operationRepository,
+            CategoryService categoryService,
+            OperationCustomRepository operationCustomRepository) {
         this.operationRepository = operationRepository;
         this.categoryService = categoryService;
+        this.operationCustomRepository = operationCustomRepository;
     }
 
     public Optional<Operation> findById(Long id) {
@@ -58,5 +65,25 @@ public class OperationService {
                 .user(user)
                 .build();
         operationRepository.save(newOperation);
+    }
+
+    /**
+     * Gets the user's account balance
+     *
+     * @param user
+     * @return
+     */
+    public BigDecimal getBalance(User user) {
+        return this.operationCustomRepository.getBalance(user.getId());
+    }
+
+    /**
+     * Gets the user's account balance
+     *
+     * @param user
+     * @return
+     */
+    public List<AmountPerCategoryView> getAmountPerCategory(User user) {
+        return this.operationCustomRepository.getAmountPerCategory(user.getId());
     }
 }

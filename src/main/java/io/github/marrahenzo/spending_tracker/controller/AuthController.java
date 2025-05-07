@@ -41,7 +41,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         var session = httpRequest.getSession(true);
-        session.setAttribute(Constants.SESSION_USER_ID, user.get().getId());
+        session.setAttribute(Constants.SESSION_USER, user.get());
         return ResponseEntity.ok().body(SuccessDTO.builder().message("Log in successful").build());
     }
 
